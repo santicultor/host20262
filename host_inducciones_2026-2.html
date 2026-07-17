@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Host · Inducciones 2026-2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── VARIABLES ─────────────────────────────────────────── */
+:root{
+  --navy:#00205B; --blue:#00387B; --blue-l:#2C5DA8;
+  --white:#FFFFFF; --paper:#F4F7FD; --line:#DDE4F0;
+  --green:#1E8E5A; --amber:#C97A1A; --red:#B83232;
+  --grey:#6B7A99; --alert:#FFD600;
+  --shadow:0 8px 28px -8px rgba(0,32,91,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--navy);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.mono{font-family:'Space Mono',monospace;}
+.serif{font-family:'Playfair Display',serif;}
+
+/* ── SCREENS ────────────────────────────────────────────── */
+.screen{display:none;min-height:100vh;animation:fadeIn .35s ease;}
+.screen.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ── TOPBAR ─────────────────────────────────────────────── */
+.topbar{background:linear-gradient(135deg,var(--navy),var(--blue));color:var(--white);padding:20px 18px 28px;border-radius:0 0 26px 26px;}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.back-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--white);font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:600;padding:7px 13px;border-radius:100px;cursor:pointer;}
+.back-btn:hover{background:rgba(255,255,255,.24);}
+.eyebrow{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:600;margin-bottom:5px;}
+.topbar h1{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(20px,5vw,28px);line-height:1.15;}
+.pillrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.pill{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 11px;font-size:11.5px;color:rgba(255,255,255,.92);display:flex;align-items:center;gap:5px;}
+
+/* ── LANDING ────────────────────────────────────────────── */
+#screen-landing .topbar{border-radius:0 0 32px 32px;padding:40px 22px 48px;text-align:center;}
+#screen-landing .topbar h1{font-size:clamp(26px,7vw,38px);}
+#screen-landing .topbar p{color:rgba(255,255,255,.8);font-size:13.5px;margin-top:8px;max-width:340px;margin-inline:auto;}
+.landing-cards{max-width:480px;margin:-18px auto 0;padding:0 18px 50px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:2;}
+.landing-card{background:var(--white);border-radius:20px;box-shadow:var(--shadow);border:1px solid var(--line);padding:22px 20px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:transform .15s ease,box-shadow .15s ease;text-align:left;}
+.landing-card:hover{transform:translateY(-2px);box-shadow:0 14px 34px -10px rgba(0,32,91,.3);}
+.landing-card .lc-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.landing-card.host-card .lc-icon{background:#EAF1FF;}
+.landing-card.org-card .lc-icon{background:#FFF3E3;}
+.landing-card .lc-txt h3{font-size:16px;font-weight:700;color:var(--navy);}
+.landing-card .lc-txt p{font-size:12.5px;color:var(--grey);margin-top:3px;line-height:1.4;}
+.landing-card .lc-chev{margin-left:auto;color:var(--grey);font-size:20px;}
+
+/* ── HOST MAIN ──────────────────────────────────────────── */
+.host-wrap{max-width:600px;margin:0 auto;padding:0 16px 60px;}
+
+/* Alert banner */
+.alert-banner{
+  margin-top:-14px;position:relative;z-index:10;
+  background:var(--alert);border-radius:16px;padding:14px 16px;
+  display:none;animation:pulse-banner 1.2s ease infinite;
+  border:2px solid #E6C200;
+}
+.alert-banner.active{display:flex;align-items:flex-start;gap:12px;}
+@keyframes pulse-banner{0%,100%{box-shadow:0 0 0 0 rgba(255,214,0,.5);}50%{box-shadow:0 0 0 8px rgba(255,214,0,0);}}
+.alert-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.alert-body h4{font-size:13px;font-weight:700;color:#4A3800;}
+.alert-body p{font-size:12.5px;color:#5C4600;margin-top:3px;line-height:1.4;}
+.alert-dismiss{margin-left:auto;background:rgba(0,0,0,.12);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;flex-shrink:0;}
+
+/* Now card */
+.now-card{
+  background:linear-gradient(135deg,var(--navy),var(--blue-l));
+  border-radius:20px;padding:20px;color:var(--white);
+  margin-top:16px;box-shadow:var(--shadow);
+}
+.now-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;font-weight:700;margin-bottom:6px;}
+.now-group{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;line-height:1.2;}
+.now-sub{font-size:12.5px;opacity:.8;margin-top:4px;}
+.now-row{display:flex;align-items:center;gap:10px;margin-top:14px;}
+.now-countdown{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;letter-spacing:.02em;}
+.now-until{font-size:11.5px;opacity:.75;margin-top:2px;}
+.next-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:8px 12px;margin-top:12px;font-size:12px;}
+.next-chip span{opacity:.75;}
+
+/* Section header */
+.sec-head{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--grey);margin:22px 0 10px;}
+
+/* Script card */
+.script-card{background:var(--white);border-radius:16px;border:1px solid var(--line);padding:16px;margin-bottom:10px;box-shadow:0 3px 12px -6px rgba(0,32,91,.12);}
+.script-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:100px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.badge-pre{background:#EAF1FF;color:var(--blue);}
+.badge-post{background:#EAF8F0;color:var(--green);}
+.badge-apertura{background:#FFF3E3;color:var(--amber);}
+.badge-cierre{background:#F3EAF8;color:#6B3FA0;}
+.badge-alerta{background:var(--alert);color:#4A3800;}
+.script-text{font-size:13.5px;line-height:1.65;color:#222;font-style:italic;border-left:3px solid var(--blue-l);padding-left:12px;margin-top:4px;}
+.script-note{font-size:11.5px;color:var(--grey);margin-top:8px;padding-top:8px;border-top:1px solid var(--line);}
+
+/* Group info card */
+.group-info-card{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:10px;}
+.group-info-header{background:var(--paper);padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+.group-info-header h4{font-weight:700;font-size:14.5px;color:var(--navy);}
+.group-info-header span{font-size:11.5px;color:var(--grey);}
+.group-info-body{padding:14px 16px;}
+.group-info-body p{font-size:13px;color:#333;line-height:1.55;margin-bottom:10px;}
+.logro-item{font-size:12.5px;color:var(--navy);padding:5px 0;display:flex;gap:8px;align-items:flex-start;}
+.logro-item::before{content:'→';color:var(--blue-l);font-weight:700;flex-shrink:0;}
+.info-row-small{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.info-chip{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:11.5px;color:var(--navy);}
+
+/* Timeline */
+.timeline{margin-top:4px;}
+.tl-item{display:flex;gap:12px;margin-bottom:6px;position:relative;}
+.tl-item::before{content:'';position:absolute;left:37px;top:32px;bottom:-6px;width:2px;background:var(--line);}
+.tl-item:last-child::before{display:none;}
+.tl-time{font-family:'Space Mono',monospace;font-size:10.5px;color:var(--grey);width:62px;flex-shrink:0;padding-top:12px;text-align:right;}
+.tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:11px;border:2px solid var(--line);background:var(--white);}
+.tl-dot.is-current{background:var(--blue);border-color:var(--blue);box-shadow:0 0 0 4px rgba(0,56,123,.15);}
+.tl-dot.is-done{background:var(--green);border-color:var(--green);}
+.tl-dot.is-host{background:var(--line);border-color:var(--line);}
+.tl-card{flex:1;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:0;}
+.tl-card.is-current{border-color:var(--blue);background:#EAF1FF;}
+.tl-card.is-host{opacity:.5;font-style:italic;}
+.tl-card h5{font-size:13px;font-weight:700;color:var(--navy);}
+.tl-card .tl-sub{font-size:11px;color:var(--grey);margin-top:2px;}
+.tl-card .tl-dur{font-size:11px;color:var(--blue-l);font-weight:600;margin-top:2px;}
+
+/* Progress bar */
+.progress-wrap{background:var(--line);border-radius:100px;height:6px;margin-top:10px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-l));border-radius:100px;transition:width .8s ease;}
+
+/* ── ORGANIZADOR ────────────────────────────────────────── */
+.org-wrap{max-width:560px;margin:0 auto;padding:0 16px 60px;}
+.org-compose{background:var(--white);border-radius:18px;border:1px solid var(--line);padding:18px;margin-top:16px;box-shadow:var(--shadow);}
+.org-compose h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px;}
+.org-textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--navy);resize:none;outline:none;min-height:90px;}
+.org-textarea:focus{border-color:var(--blue);}
+.org-send-btn{display:block;width:100%;margin-top:10px;padding:14px;background:var(--navy);color:var(--white);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.org-send-btn:disabled{opacity:.5;cursor:default;}
+.org-status{font-size:12.5px;color:var(--grey);text-align:center;margin-top:8px;min-height:18px;}
+.org-history{margin-top:20px;}
+.org-history h4{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);font-weight:700;margin-bottom:10px;}
+.msg-item{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.msg-item .msg-text{font-size:13.5px;color:var(--navy);line-height:1.5;}
+.msg-item .msg-meta{font-size:11px;color:var(--grey);margin-top:6px;font-family:'Space Mono',monospace;}
+.msg-delete{float:right;background:none;border:none;color:var(--grey);font-size:16px;cursor:pointer;margin-top:-2px;}
+
+/* ── MODAL guion completo ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,16,46,.6);display:none;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(2px);}
+.modal-overlay.active{display:flex;animation:fadeIn .25s ease;}
+.modal-sheet{background:var(--white);width:100%;max-width:600px;border-radius:24px 24px 0 0;max-height:88vh;overflow-y:auto;padding:16px 18px 32px;animation:slideUp .3s ease;}
+@media(min-width:640px){.modal-overlay.active{align-items:center;}.modal-sheet{border-radius:24px;max-height:84vh;}}
+@keyframes slideUp{from{transform:translateY(40px);opacity:.5;}to{transform:none;opacity:1;}}
+.modal-handle{width:40px;height:4px;background:var(--line);border-radius:10px;margin:0 auto 14px;}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;gap:10px;}
+.modal-head .mh-name{font-family:'Playfair Display',serif;font-weight:700;font-size:21px;color:var(--navy);line-height:1.2;}
+.modal-head .mh-sub{font-size:12.5px;color:var(--grey);margin-top:3px;}
+.modal-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--paper);color:var(--navy);font-size:16px;cursor:pointer;flex-shrink:0;}
+.modal-slot{background:#EAF1FF;border-radius:10px;padding:8px 12px;font-size:12.5px;color:var(--blue);font-weight:600;margin:12px 0;font-family:'Space Mono',monospace;}
+.station-chevron{margin-left:auto;color:var(--grey);font-size:18px;flex-shrink:0;align-self:center;}
+.tl-card{cursor:pointer;}
+.tl-card:hover{border-color:var(--blue-l);}
+.zone-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.zone-card h5{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.zone-slot{font-size:11.5px;color:var(--grey);font-family:'Space Mono',monospace;padding:2px 0;}
+.zone-slot b{color:var(--navy);font-family:'DM Sans',sans-serif;}
+
+::-webkit-scrollbar{width:0;}
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══════════════════════════════════════════ -->
+<section class="screen active" id="screen-landing">
+  <div class="topbar">
+    <div class="eyebrow">Desarrollo Cultural · UniSabana</div>
+    <h1>Inducciones 2026-2</h1>
+    <p>Aplicación interna para la conducción del evento. Elige tu rol para continuar.</p>
+    <div class="pillrow" style="justify-content:center;">
+      <span class="pill">📅 Vie. 17 jul 2026</span>
+      <span class="pill">🕐 12:00 – 3:00 p.m.</span>
+      <span class="pill">📍 Arena Sabana</span>
+    </div>
+  </div>
+  <div class="landing-cards">
+    <div class="landing-card host-card" onclick="goTo('host')">
+      <div class="lc-icon">🎙️</div>
+      <div class="lc-txt">
+        <h3>Soy el Host</h3>
+        <p>Cronograma en vivo, guiones y pautas para conducir el evento.</p>
+      </div>
+      <div class="lc-chev">›</div>
+    </div>
+    <div class="landing-card org-card" onclick="goTo('org')">
+      <div class="lc-icon">📡</div>
+      <div class="lc-txt">
+        <h3>Soy del equipo organizador</h3>
+        <p>Envía instrucciones y avisos al host en tiempo real.</p>
+      </div>
+      <div class="lc-chev">›</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOST ══════════════════════════════════════════════ -->
+<section class="screen" id="screen-host">
+  <div class="topbar">
+    <div class="topbar-row">
+      <button class="back-btn" onclick="goTo('landing')">← Inicio</button>
+      <span class="pill" id="host-clock" style="font-family:'Space Mono',monospace;font-size:12px;">00:00:00</span>
+    </div>
+    <div class="eyebrow">Host · Inducciones 2026-2</div>
+    <h1 id="host-current-name">Cargando…</h1>
+    <div class="pillrow">
+      <span class="pill" id="host-location-pill">📍 Arena Sabana</span>
+      <span class="pill" id="host-time-pill">🕐 12:00 p.m.</span>
+    </div>
+  </div>
+  <div class="host-wrap">
+
+    <!-- Alert banner: mensajes del organizador -->
+    <div class="alert-banner" id="alert-banner">
+      <span class="alert-icon">📢</span>
+      <div class="alert-body">
+        <h4>Mensaje del equipo</h4>
+        <p id="alert-text"></p>
+      </div>
+      <button class="alert-dismiss" onclick="dismissAlert()" title="Marcar como leído">✕</button>
+    </div>
+
+    <!-- Cuenta regresiva / estado actual -->
+    <div class="now-card" id="now-card">
+      <div class="now-label" id="now-label">Ahora en tarima</div>
+      <div class="now-group" id="now-group">—</div>
+      <div class="now-sub" id="now-sub"></div>
+      <div class="now-row">
+        <div>
+          <div class="now-countdown mono" id="now-countdown">00:00</div>
+          <div class="now-until" id="now-until"></div>
+        </div>
+        <div style="flex:1;margin-left:16px;">
+          <div class="progress-wrap"><div class="progress-fill" id="event-progress" style="width:0%"></div></div>
+          <div style="font-size:10.5px;opacity:.65;margin-top:4px;" id="progress-label">Progreso del evento</div>
+        </div>
+      </div>
+      <div class="next-chip" id="next-chip"><span>Siguiente: </span><b id="next-group">—</b></div>
+    </div>
+
+    <!-- Guion activo -->
+    <div class="sec-head">💬 Qué decir ahora</div>
+    <div id="script-container"></div>
+
+    <!-- Info del grupo actual -->
+    <div id="group-info-container"></div>
+
+    <!-- Cronograma del día -->
+    <div class="sec-head">📋 Cronograma completo · toca un grupo para ver su guion</div>
+    <div class="timeline" id="timeline-tarima"></div>
+
+    <!-- Otras zonas: Pérgola e Itinerante -->
+    <div class="sec-head">🎭 Otras zonas del evento</div>
+    <div id="other-zones"></div>
+
+    <!-- Paralelos -->
+    <div class="sec-head">🔄 Simultáneo ahora</div>
+    <div id="parallel-container"></div>
+
+    <!-- Historial de mensajes del organizador -->
+    <div class="sec-head" id="msg-history-head" style="display:none;">📬 Mensajes anteriores del equipo</div>
+    <div id="msg-history"></div>
+
+  </div>
+</section>
+
+<!-- ═══ MODAL: guion completo de un grupo ═══════════════════ -->
+<div class="modal-overlay" id="modal-script" onclick="if(event.target===this)closeScriptModal()">
+  <div class="modal-sheet" id="script-modal-content"></div>
+</div>
+
+<!-- ═══ ORGANIZADOR ═══════════════════════════════════════ -->
+<section class="screen" id="screen-org">
+  <div class="topbar">
+    <div class="topbar-row">
+      <button class="back-btn" onclick="goTo('landing')">← Inicio</button>
+    </div>
+    <div class="eyebrow">Equipo organizador · Inducciones 2026-2</div>
+    <h1>Enviar instrucción al Host</h1>
+    <div class="pillrow">
+      <div class="pill" id="org-clock-pill" style="font-family:'Space Mono',monospace;">⏱ 00:00:00</div>
+    </div>
+  </div>
+  <div class="org-wrap">
+    <div class="org-compose">
+      <h3>📢 Nueva instrucción para el host</h3>
+      <textarea class="org-textarea" id="org-input" placeholder="Ej: Menciona que hay inscripciones abiertas para Génesis en la Pérgola…" maxlength="280"></textarea>
+      <button class="org-send-btn" id="org-send-btn" onclick="sendMessage()">Enviar al host →</button>
+      <div class="org-status" id="org-status"></div>
+    </div>
+    <!-- Estado actual del evento para el organizador -->
+    <div class="sec-head">🎯 Estado actual del evento</div>
+    <div class="now-card" id="org-now-card">
+      <div class="now-label">Ahora en tarima</div>
+      <div class="now-group" id="org-now-group">—</div>
+      <div class="now-sub" id="org-now-sub"></div>
+      <div class="next-chip" id="org-next-chip" style="margin-top:10px;"><span>Siguiente: </span><b id="org-next-group">—</b></div>
+    </div>
+    <div class="sec-head">📩 Mensajes enviados hoy</div>
+    <div class="org-history">
+      <div id="org-history-list"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIGURACIÓN — reemplaza con tu SheetDB URL y sheet name
+   ═══════════════════════════════════════════════════════════ */
+const SHEETDB_URL  = 'https://sheetdb.io/api/v1/bwl0se54azi0g';   // ← pegar aquí
+const SHEET_NAME   = 'Host_inducciones';    // ← nombre de la hoja
+
+/* ═══════════════════════════════════════════════════════════
+   DATOS DEL EVENTO
+   ═══════════════════════════════════════════════════════════ */
+const EVENT_DAY = '2026-07-17';
+function parseTimeOnDay(str){
+  let [h,m]=str.split(':').map(Number);
+  if(h>=1&&h<=3)h+=12;
+  const d=new Date(EVENT_DAY+'T00:00:00-05:00');
+  d.setHours(h,m,0,0);return d;
+}
+
+const LOCATIONS=[
+  {id:"entrada",name:"Entrada Arena Sabana",shortName:"Entrada",blocks:[
+    {time:"12:00 – 12:20",group:"Repercusión",kind:"performance",duration:20,note:"Recepción de estudiantes al ingreso."}
+  ]},
+  {id:"tarima",name:"Tarima Principal",shortName:"Tarima",blocks:[
+    {time:"12:20 – 12:30",group:"Entre Mares",kind:"performance",duration:10},
+    {time:"12:30 – 12:35",group:"Host",kind:"host"},
+    {time:"12:35 – 12:45",group:"Vallenato / Parranda",kind:"performance",duration:10},
+    {time:"12:45 – 12:50",group:"Host",kind:"host"},
+    {time:"12:50 – 1:05",group:"Grupo Fusión",kind:"performance",duration:15},
+    {time:"1:05 – 1:10",group:"Host",kind:"host"},
+    {time:"1:10 – 1:20",group:"Punto Rock",kind:"performance",duration:10},
+    {time:"1:20 – 1:25",group:"Host",kind:"host"},
+    {time:"1:25 – 1:35",group:"Puente Rojo",kind:"performance",duration:10},
+    {time:"1:35 – 1:40",group:"Host",kind:"host"},
+    {time:"1:40 – 1:55",group:"Ancestros",kind:"performance",duration:15,subtype:"Danza Folclórica"},
+    {time:"1:55 – 2:00",group:"Host",kind:"host"},
+    {time:"2:00 – 2:10",group:"Tuna Masculina",kind:"performance",duration:10},
+    {time:"2:10 – 2:15",group:"Host",kind:"host"},
+    {time:"2:15 – 2:25",group:"Tuna Femenina",kind:"performance",duration:10},
+    {time:"2:25 – 2:30",group:"Host",kind:"host"},
+    {time:"2:30 – 2:40",group:"Orquesta Sinfónica",kind:"performance",duration:10},
+    {time:"2:40 – 2:45",group:"Host",kind:"host"},
+    {time:"2:45 – 3:00",group:"Host – Cierre",kind:"host"}
+  ]},
+  {id:"pergola",name:"Pérgola de Danza",shortName:"Pérgola",blocks:[
+    {time:"12:20 – 1:00",group:"Ancestros",kind:"workshop",duration:40,subtype:"Taller danza folclórica"},
+    {time:"1:15 – 1:55",group:"Génesis",kind:"workshop",duration:40,subtype:"Taller danza urbana"},
+    {time:"1:55 – 2:10",group:"Génesis",kind:"workshop",duration:15,subtype:"Inscripción y cierre"},
+    {time:"2:10 – 2:50",group:"Saoko",kind:"workshop",duration:40,subtype:"Taller salsa y bachata"}
+  ]},
+  {id:"teatro-zona",name:"Itinerante",shortName:"Itinerante",blocks:[
+    {time:"12:20 – 3:00",group:"Teatro",kind:"continuous",subtype:"Activaciones y sketches por el campus"}
+  ]}
+];
+LOCATIONS.forEach(loc=>{
+  loc.blocksWithDates=loc.blocks.map(b=>{
+    const[s,e]=b.time.split('–').map(x=>x.trim());
+    return{...b,start:parseTimeOnDay(s),end:parseTimeOnDay(e),locId:loc.id,locName:loc.shortName};
+  });
+});
+const TARIMA=LOCATIONS.find(l=>l.id==='tarima');
+const eventStart=parseTimeOnDay('12:00');
+const eventEnd=parseTimeOnDay('3:00');
+
+/* ── Guiones por grupo ────────────────────────────────────── */
+const SCRIPTS={
+  '__apertura__':{
+    pre:{badge:'apertura',label:'Apertura del evento',
+      text:'¡Bienvenidos a La Sabana! Hoy no venimos a explicarles qué es la universidad. Venimos a mostrársela. Estos son los grupos representativos artísticos — quince grupos que ensayan cada semana, suben a escenarios nacionales, y abren las puertas a quien quiera ser parte de algo más grande que una carrera. Todos tienen inscripciones abiertas. El link está en pantalla.',
+      note:'Energía alta, voz proyectada. Recuerda mencionar los talleres en la Pérgola y las activaciones de Teatro por el campus.'}
+  },
+  'Repercusión':{
+    pre:{badge:'pre',label:'Antes de que inicien',
+      text:'Repercusión está recibiendo a los estudiantes nuevos en la entrada. Su trabajo hoy no es solo musical — es crear la primera impresión del evento.',
+      note:'Grupo de percusión tipo drumline. Dir. Santiago Torrents. Ensayan lunes y miércoles, Sala de ensayo 2.'},
+    logros:['Representan a La Sabana en festivales universitarios de percusión a nivel nacional.','Combinan disciplina musical con coreografía grupal.','Una de las presencias más impactantes del campus.'],
+    post:{badge:'post',label:'Después de su momento en entrada',
+      text:'Repercusión abrió el camino. Y así como ellos marcan el ritmo, hoy la cultura de La Sabana marca el inicio de tu vida universitaria.',
+      note:'Transición hacia el ingreso al Arena Sabana.'}
+  },
+  'Entre Mares':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'Abren la Tarima Principal. Entre Mares trae desde el primer momento las raíces musicales de Colombia — gaitas y tambores del Pacífico y el Caribe.',
+      note:'Dir. Jordy Sánchez.'},
+    logros:['Representan a La Sabana en encuentros de músicas tradicionales colombianas.','Mantienen viva una tradición que combina herencia africana, indígena y española.','Llevan las músicas del Pacífico y el Caribe a escenarios universitarios de todo el país.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Entre Mares acaba de traernos Colombia entera en 10 minutos. Eso es lo que hacen cada semana. Si esto te llamó, sus ensayos son los miércoles y viernes en la Sala de ensayo 2.',
+      note:'Mencionar link de inscripción en pantalla.'}
+  },
+  'Vallenato / Parranda':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'Ahora, el ritmo que nos une como colombianos. La alegría del vallenato llega a la tarima — acordeón, caja y guacharaca.',
+      note:'Dir. Jordy Sánchez.'},
+    logros:['Vallenato: Patrimonio Inmaterial de la Humanidad (UNESCO).','Participan en festivales universitarios del Caribe colombiano.','Hacen que la parranda sea parte de la identidad cultural de La Sabana.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'El vallenato — Patrimonio de la Humanidad — acaba de sonar en La Sabana. Si quieres aprender o ya sabes tocar, Vallenato y Parranda ensayan miércoles y viernes en la Sala de ensayo 2.',
+      note:''}
+  },
+  'Grupo Fusión':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'Ahora el grupo que no se define por un solo sonido. Grupo Fusión tiene 15 minutos para mostrarnos todo lo que la música puede ser — crossover, pop, rock, lo que pidan.',
+      note:'Dir. Gustavo Rincón. 15 minutos — el tiempo más largo de la tarde.'},
+    logros:['Banda de crossover: fusionan géneros y sonoridades en un mismo repertorio.','Ningún concierto de Fusión suena igual al anterior — esa es su marca.','Representan a La Sabana en la agenda cultural y festivales universitarios.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Eso es Grupo Fusión — la prueba de que en La Sabana la música no tiene fronteras. Ensayan miércoles y viernes en la Sala de ensayo 1.',
+      note:''}
+  },
+  'Punto Rock':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'El volumen sube. Punto Rock trae el rock a la Tarima Principal.',
+      note:'Dir. Julián Crosby.'},
+    logros:['Llevan el rock a los escenarios universitarios con energía que genera comunidad.','Representan a La Sabana en encuentros universitarios de bandas a nivel nacional.','Han formado músicos que hoy se desempeñan profesionalmente en la escena colombiana.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Punto Rock — el rock de La Sabana, con todo el género encima. Ensayan martes y jueves en la Sala de ensayo 1.',
+      note:''}
+  },
+  'Puente Rojo':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'De la misma familia musical, otro sonido. Puente Rojo llega con su propuesta de pop-rock.',
+      note:'Dir. Julián Crosby — mismo director que Punto Rock.'},
+    logros:['Construyen una propuesta pop-rock propia, con versiones y temas propios.','Participan en los festivales y conciertos de la agenda cultural de La Sabana.','Un sonido identificable que conecta con la comunidad estudiantil.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Dos bandas, un mismo director, mundos distintos. Eso es lo que hace única la escena musical de La Sabana. Puente Rojo ensaya martes y jueves en la Sala de ensayo 1.',
+      note:''}
+  },
+  'Ancestros':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'Ahora la tarima se transforma. Ancestros nos trae las tradiciones dancísticas de Colombia en 15 minutos de danza folclórica.',
+      note:'Dir. Alexandra Reyes. Hoy también tienen taller abierto — fue en la Pérgola de 12:20 a 1:00 p.m.'},
+    logros:['🏆 Primer lugar en los Juegos Universitarios ASCUN 2026 en Danza Folclórica.','Su montaje "Cintureras de Guaduas" representa la tradición de Cundinamarca.','Con 34 integrantes, es el grupo representativo con más estudiantes activos.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Cada movimiento de Ancestros es una historia de Colombia. Si la danza folclórica te llamó, ensayan lunes, jueves y viernes en la Pérgola 3.',
+      note:''}
+  },
+  'Tuna Masculina':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'Una de las tradiciones más antiguas de la universidad llega ahora a la tarima. La Tuna Masculina de La Sabana.',
+      note:'Dir. Alejandro Trochez. Las tunas tienen siglos de historia en las universidades hispánicas.'},
+    logros:['Participan en encuentros de tunas universitarias a nivel nacional e internacional.','Guardianes de una tradición musical universitaria de siglos.','Han representado a La Sabana en certámenes internacionales.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Siglos de tradición universitaria, vivos hoy en La Sabana. La Tuna Masculina ensaya martes y viernes en la Sala de ensayo 3.',
+      note:''}
+  },
+  'Tuna Femenina':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'La tradición continúa, ahora con la voz femenina de La Sabana. La Tuna Femenina.',
+      note:'Dir. Juliana Ñungo.'},
+    logros:['Una de las tunas femeninas universitarias más activas de Colombia.','Participan en festivales y encuentros de tunas a nivel nacional.','Rompen con la tradición masculina para construir una voz propia.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'Dos tunas, una sola universidad. La Tuna Femenina ensaya martes y viernes en la Sala de ensayo 3.',
+      note:''}
+  },
+  'Orquesta Sinfónica':{
+    pre:{badge:'pre',label:'Antes de que suban',
+      text:'Para cerrar la Tarima Principal, el grupo de mayor amplitud sonora de La Sabana. La Orquesta Sinfónica Universitaria — OSUS.',
+      note:'Dir. Alexander Pinilla. Una de las pocas orquestas sinfónicas universitarias activas en Colombia.'},
+    logros:['Una de las pocas orquestas sinfónicas universitarias activas en Colombia.','Han interpretado obras del repertorio clásico y contemporáneo en escenarios de Bogotá y Chía.','Forman músicos con un nivel técnico e interpretativo de alto nivel.'],
+    post:{badge:'post',label:'Después de la presentación',
+      text:'La OSUS cierra la tarima principal como lo que es: la agrupación que demuestra que en La Sabana la música académica también tiene casa. Ensayan martes y miércoles en la Sala de ensayo 3.',
+      note:''}
+  },
+  '__cierre__':{
+    post:{badge:'cierre',label:'Cierre general del evento',
+      text:'¡Y así cerramos las Inducciones 2026-2! Acabaron de conocer los grupos representativos artísticos de La Sabana. Quince grupos, disciplinas distintas, un solo propósito: hacer de esta universidad un lugar donde uno también crece como persona. ¿La única condición? Promedio de 3.4 y las ganas de comprometerse. El link de inscripción está en pantalla. Bienvenidos a La Sabana. Esto apenas empieza.',
+      note:'Recordar que los directores siguen disponibles después del evento. Saoko tiene taller en la Pérgola hasta las 2:50.'}
+  }
+};
+
+/* ── Info extendida por grupo (para la ficha en pantalla del host) ─── */
+const GROUP_DETAIL={
+  'Repercusión':{director:'Santiago Torrents',desc:'Drumline con coreografía. Ritmo y movimiento en conjunto.',ensayo:'Lunes y Miércoles · Sala de ensayo 2'},
+  'Entre Mares':{director:'Jordy Sánchez',desc:'Gaitas y tambores del Pacífico y el Caribe colombiano.',ensayo:'Miércoles y Viernes · Sala de ensayo 2'},
+  'Vallenato / Parranda':{director:'Jordy Sánchez',desc:'Acordeón, caja y guacharaca. Tradición vallenata.',ensayo:'Miércoles y Viernes · Sala de ensayo 2'},
+  'Grupo Fusión':{director:'Gustavo Rincón',desc:'Crossover: mezcla géneros y rompe fronteras musicales.',ensayo:'Miércoles y Viernes · Sala de ensayo 1'},
+  'Punto Rock':{director:'Julián Crosby',desc:'Rock universitario con amplia energía en vivo.',ensayo:'Martes y Jueves · Sala de ensayo 1'},
+  'Puente Rojo':{director:'Julián Crosby',desc:'Pop-rock con arreglos propios para públicos jóvenes.',ensayo:'Martes y Jueves · Sala de ensayo 1'},
+  'Ancestros':{director:'Alexandra Reyes',desc:'Danza folclórica colombiana: memoria, identidad y celebración.',ensayo:'Lun / Jue / Vie · Pérgola 3'},
+  'Tuna Masculina':{director:'Alejandro Trochez',desc:'Cuerda, percusión y voz. Tradición universitaria de siglos.',ensayo:'Martes y Viernes · Sala de ensayo 3'},
+  'Tuna Femenina':{director:'Juliana Ñungo',desc:'Tuna universitaria femenina. Voz y tradición propias.',ensayo:'Martes y Viernes · Sala de ensayo 3'},
+  'Orquesta Sinfónica':{director:'Alexander Pinilla',desc:'OSUS: cuerdas, vientos y repertorio académico y contemporáneo.',ensayo:'Martes y Miércoles · Sala de ensayo 3'},
+};
+
+/* ═══════════════════════════════════════════════════════════
+   NAVEGACIÓN
+   ═══════════════════════════════════════════════════════════ */
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+  window.scrollTo(0,0);
+  if(screen==='org') renderOrgHistory();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILIDADES DE TIEMPO
+   ═══════════════════════════════════════════════════════════ */
+function fmtTime(d){return d.toLocaleTimeString('es-CO',{hour:'numeric',minute:'2-digit'});}
+function fmtCountdown(ms){
+  const s=Math.max(0,Math.floor(ms/1000));
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  if(h>0)return `${h}h ${String(m).padStart(2,'0')}m`;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+function fmtHHMM(d){
+  return d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ESTADO DEL EVENTO EN VIVO
+   ═══════════════════════════════════════════════════════════ */
+function getCurrentBlock(now){
+  for(const b of TARIMA.blocksWithDates){
+    if(now>=b.start&&now<b.end)return b;
+  }
+  return null;
+}
+function getNextBlock(now){
+  return TARIMA.blocksWithDates.find(b=>b.kind!=='host'&&now<b.start)||null;
+}
+
+function getScriptContext(now,current){
+  // Apertura: antes del primer bloque
+  if(now<eventStart)return{key:'__apertura__',phase:'pre'};
+  // Cierre: pasado el último bloque de presentación
+  if(now>=parseTimeOnDay('2:40'))return{key:'__cierre__',phase:'post'};
+  if(!current)return null;
+  if(current.kind==='host'){
+    // Entre grupos: el post del grupo anterior
+    const idx=TARIMA.blocksWithDates.indexOf(current);
+    for(let i=idx-1;i>=0;i--){
+      if(TARIMA.blocksWithDates[i].kind==='performance'){
+        return{key:TARIMA.blocksWithDates[i].group,phase:'post'};
+      }
+    }
+    return null;
+  }
+  if(current.kind==='performance')return{key:current.group,phase:'pre'};
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER HOST
+   ═══════════════════════════════════════════════════════════ */
+function renderHostNow(now){
+  const current=getCurrentBlock(now);
+  const next=getNextBlock(now);
+
+  // Topbar
+  const isBeforeEvent=now<eventStart;
+  const isAfterEvent=now>=eventEnd;
+  let headerName='Evento finalizado';
+  let locPill='📍 Arena Sabana';
+  let timePill='🕐 3:00 p.m.';
+
+  if(isBeforeEvent){
+    headerName='Preparación — el evento aún no inicia';
+    timePill=`🕐 Inicia a las ${fmtTime(eventStart)}`;
+  } else if(current){
+    if(current.kind==='host')headerName='Cambio técnico en curso';
+    else headerName=current.kind==='performance'?`En tarima: ${current.group}`:`En Pérgola: ${current.group}`;
+    locPill=`📍 ${current.locName||'Tarima Principal'}`;
+    timePill=`🕐 Hasta ${fmtTime(current.end)}`;
+  }
+
+  document.getElementById('host-current-name').textContent=headerName;
+  document.getElementById('host-location-pill').textContent=locPill;
+  document.getElementById('host-time-pill').textContent=timePill;
+
+  // Now card
+  const nowCard=document.getElementById('now-card');
+  if(isBeforeEvent){
+    document.getElementById('now-label').textContent='Faltan para el inicio';
+    document.getElementById('now-group').textContent='Repercusión abre en la Entrada';
+    document.getElementById('now-sub').textContent='';
+    document.getElementById('now-countdown').textContent=fmtCountdown(eventStart-now);
+    document.getElementById('now-until').textContent='para que comience el evento';
+  } else if(isAfterEvent){
+    document.getElementById('now-label').textContent='Evento finalizado';
+    document.getElementById('now-group').textContent='¡Gracias por conducir el evento!';
+    document.getElementById('now-countdown').textContent='✓';
+    document.getElementById('now-until').textContent='';
+  } else if(current){
+    const isHost=current.kind==='host';
+    document.getElementById('now-label').textContent=isHost?'Cambio técnico':'En tarima ahora';
+    document.getElementById('now-group').textContent=isHost?'Espacio del host':`${current.group}${current.subtype?' · '+current.subtype:''}`;
+    document.getElementById('now-sub').textContent=current.duration?`${current.duration} minutos`:'';
+    document.getElementById('now-countdown').textContent=fmtCountdown(current.end-now);
+    document.getElementById('now-until').textContent=`hasta ${fmtTime(current.end)}`;
+  }
+
+  // Next
+  document.getElementById('next-group').textContent=next?`${next.group} a las ${fmtTime(next.start)}`:'— Cierre del evento —';
+
+  // Progress
+  const pct=Math.min(100,Math.max(0,(now-eventStart)/(eventEnd-eventStart)*100));
+  document.getElementById('event-progress').style.width=pct+'%';
+  document.getElementById('progress-label').textContent=`Progreso del evento · ${Math.round(pct)}%`;
+
+  // Script
+  const ctx=getScriptContext(now,current);
+  const scriptDiv=document.getElementById('script-container');
+  if(ctx){
+    const s=SCRIPTS[ctx.key];
+    if(s){
+      const script=s[ctx.phase]||s['pre']||s['post'];
+      if(script){
+        scriptDiv.innerHTML=`
+          <div class="script-card">
+            <span class="script-badge badge-${script.badge}">${script.label}</span>
+            <div class="script-text">${script.text}</div>
+            ${script.note?`<div class="script-note">📎 ${script.note}</div>`:''}
+          </div>`;
+      }
+    }
+  } else {
+    scriptDiv.innerHTML='<div class="script-card"><div class="script-text" style="font-style:normal;color:var(--grey);">El guion para este momento aparecerá aquí automáticamente.</div></div>';
+  }
+
+  // Group info
+  const infoDiv=document.getElementById('group-info-container');
+  const groupKey=current&&current.kind==='performance'?current.group:null;
+  const detail=groupKey?GROUP_DETAIL[groupKey]:null;
+  const logros=groupKey&&SCRIPTS[groupKey]?SCRIPTS[groupKey].logros:null;
+  if(detail&&logros){
+    infoDiv.innerHTML=`
+      <div class="sec-head">ℹ️ Ficha del grupo</div>
+      <div class="group-info-card">
+        <div class="group-info-header">
+          <div>
+            <h4>${groupKey}</h4>
+            <span>Dir. ${detail.director}</span>
+          </div>
+        </div>
+        <div class="group-info-body">
+          <p>${detail.desc}</p>
+          ${logros.map(l=>`<div class="logro-item">${l}</div>`).join('')}
+          <div class="info-row-small" style="margin-top:12px;">
+            <span class="info-chip">🗓️ ${detail.ensayo}</span>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    infoDiv.innerHTML='';
+  }
+
+  // Paralelos
+  const parallelDiv=document.getElementById('parallel-container');
+  const parallels=[];
+  [LOCATIONS.find(l=>l.id==='pergola'),LOCATIONS.find(l=>l.id==='teatro-zona')].forEach(loc=>{
+    if(!loc)return;
+    loc.blocksWithDates.forEach(b=>{
+      if(now>=b.start&&now<b.end&&b.kind!=='host'){
+        parallels.push(`<span class="info-chip">📍 ${loc.shortName}: <b>${b.group}</b>${b.subtype?' · '+b.subtype:''}</span>`);
+      }
+    });
+  });
+  parallelDiv.innerHTML=parallels.length
+    ?`<div class="info-row-small">${parallels.join('')}</div>`
+    :`<p style="font-size:12.5px;color:var(--grey);">Sin actividades paralelas en este momento.</p>`;
+}
+
+function renderTimeline(now){
+  const tl=document.getElementById('timeline-tarima');
+  const blocks=TARIMA.blocksWithDates.filter(b=>b.kind!=='host');
+  tl.innerHTML=blocks.map(b=>{
+    const isDone=now>=b.end;
+    const isCurrent=now>=b.start&&now<b.end;
+    let dotClass=isDone?'is-done':isCurrent?'is-current':'';
+    const label=b.subtype?`${b.group} · ${b.subtype}`:b.group;
+    return`<div class="tl-item">
+      <div class="tl-time">${b.time.split('–')[0].trim()}</div>
+      <div class="tl-dot ${dotClass}"></div>
+      <div class="tl-card ${isCurrent?'is-current':''}" onclick="openScriptModal('${b.group.replace(/'/g,"\\'")}')">
+        <div style="display:flex;align-items:center;">
+          <div style="flex:1;">
+            <h5>${label}</h5>
+            ${b.duration?`<div class="tl-dur">${b.time} · ${b.duration} min</div>`:`<div class="tl-dur">${b.time}</div>`}
+          </div>
+          <span class="station-chevron">›</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* Otras zonas: Pérgola de Danza e Itinerante (Teatro) */
+function renderOtherZones(){
+  const div=document.getElementById('other-zones');
+  const zones=[LOCATIONS.find(l=>l.id==='pergola'),LOCATIONS.find(l=>l.id==='teatro-zona')];
+  div.innerHTML=zones.map(loc=>{
+    const rows=loc.blocksWithDates.map(b=>
+      `<div class="zone-slot">${b.time} · <b>${b.group}</b>${b.subtype?' — '+b.subtype:''}</div>`
+    ).join('');
+    return`<div class="zone-card"><h5>📍 ${loc.name}</h5>${rows}</div>`;
+  }).join('');
+}
+
+/* Modal: guion completo (pre + post) + ficha de cualquier grupo */
+function openScriptModal(groupName){
+  const s=SCRIPTS[groupName];
+  const detail=GROUP_DETAIL[groupName];
+  const blocks=TARIMA.blocksWithDates.filter(b=>b.group===groupName);
+  const slot=blocks.length?blocks[0].time:'';
+  const dur=blocks.length&&blocks[0].duration?` · ${blocks[0].duration} min`:'';
+
+  let html=`
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <div>
+        <div class="mh-name">${groupName}</div>
+        ${detail?`<div class="mh-sub">Dir. ${detail.director}</div>`:''}
+      </div>
+      <button class="modal-close" onclick="closeScriptModal()">✕</button>
+    </div>`;
+
+  if(slot) html+=`<div class="modal-slot">🕐 ${slot}${dur} · Tarima Principal</div>`;
+
+  if(detail) html+=`<p style="font-size:13.5px;color:#333;line-height:1.6;margin:10px 0 4px;">${detail.desc}</p>`;
+
+  if(s){
+    if(s.pre){
+      html+=`<div class="sec-head" style="margin-top:16px;">💬 Antes de que suban</div>
+        <div class="script-card"><div class="script-text">${s.pre.text}</div>
+        ${s.pre.note?`<div class="script-note">📎 ${s.pre.note}</div>`:''}</div>`;
+    }
+    if(s.logros){
+      html+=`<div class="sec-head" style="margin-top:14px;">🏆 Logros que puedes mencionar</div>
+        <div class="group-info-card"><div class="group-info-body">
+        ${s.logros.map(l=>`<div class="logro-item">${l}</div>`).join('')}</div></div>`;
+    }
+    if(s.post){
+      html+=`<div class="sec-head" style="margin-top:14px;">✅ Después de la presentación</div>
+        <div class="script-card"><div class="script-text">${s.post.text}</div>
+        ${s.post.note?`<div class="script-note">📎 ${s.post.note}</div>`:''}</div>`;
+    }
+  }
+  if(detail){
+    html+=`<div class="info-row-small" style="margin-top:14px;"><span class="info-chip">🗓️ Ensayos: ${detail.ensayo}</span></div>`;
+  }
+  if(!s&&!detail){
+    html+=`<p style="font-size:13px;color:var(--grey);margin-top:14px;">Sin guion específico para este grupo.</p>`;
+  }
+
+  document.getElementById('script-modal-content').innerHTML=html;
+  document.getElementById('modal-script').classList.add('active');
+}
+function closeScriptModal(){
+  document.getElementById('modal-script').classList.remove('active');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MENSAJERÍA — SHEETDB
+   ═══════════════════════════════════════════════════════════ */
+let lastMsgId=null;
+let shownAlerts=new Set();
+
+async function fetchMessages(){
+  if(!SHEETDB_URL||SHEETDB_URL.includes('PLACEHOLDER'))return[];
+  try{
+    const url=SHEET_NAME?`${SHEETDB_URL}?sheet=${encodeURIComponent(SHEET_NAME)}`:SHEETDB_URL;
+    const r=await fetch(url);
+    const data=await r.json();
+    return Array.isArray(data)?data:[];
+  }catch(e){return[];}
+}
+
+async function pollMessages(){
+  const msgs=await fetchMessages();
+  if(!msgs.length)return;
+  // Ordenar por timestamp descendente
+  const sorted=[...msgs].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  const latest=sorted[0];
+  const latestId=latest.id||latest.timestamp;
+  // Mostrar alerta si es un mensaje nuevo no visto
+  if(!shownAlerts.has(latestId)&&latest.text){
+    shownAlerts.add(latestId);
+    document.getElementById('alert-text').textContent=latest.text;
+    document.getElementById('alert-banner').classList.add('active');
+  }
+  // Historial
+  if(document.getElementById('screen-host').classList.contains('active')){
+    renderMsgHistory(sorted.slice(1,5));// los anteriores (no el más reciente)
+  }
+}
+
+function dismissAlert(){
+  document.getElementById('alert-banner').classList.remove('active');
+}
+
+function renderMsgHistory(msgs){
+  const head=document.getElementById('msg-history-head');
+  const div=document.getElementById('msg-history');
+  if(!msgs||!msgs.length){head.style.display='none';div.innerHTML='';return;}
+  head.style.display='block';
+  div.innerHTML=msgs.map(m=>`
+    <div class="msg-item">
+      <div class="msg-text">📬 ${m.text}</div>
+      <div class="msg-meta">${m.timestamp||''}</div>
+    </div>`).join('');
+}
+
+/* ── Envío desde el organizador ──── */
+async function sendMessage(){
+  const input=document.getElementById('org-input');
+  const btn=document.getElementById('org-send-btn');
+  const status=document.getElementById('org-status');
+  const text=input.value.trim();
+  if(!text)return;
+  if(SHEETDB_URL.includes('PLACEHOLDER')){
+    status.textContent='⚠️ Configura el SheetDB URL primero.';return;
+  }
+  btn.disabled=true;
+  status.textContent='Enviando…';
+  const ts=new Date().toLocaleString('es-CO',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const id=Date.now().toString();
+  try{
+    const url=SHEET_NAME?`${SHEETDB_URL}?sheet=${encodeURIComponent(SHEET_NAME)}`:SHEETDB_URL;
+    // form-urlencoded = petición "simple", no dispara preflight CORS.
+    const params=new URLSearchParams();
+    params.append('data[0][id]',id);
+    params.append('data[0][text]',text);
+    params.append('data[0][timestamp]',ts);
+    const r=await fetch(url,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+      body:params.toString()
+    });
+    if(r.ok){
+      status.textContent='✓ Mensaje enviado al host.';
+      input.value='';
+      setTimeout(()=>status.textContent='',3000);
+      renderOrgHistory();
+    }else{
+      const errTxt=await r.text().catch(()=>'');
+      status.textContent=`Error ${r.status}: ${errTxt.slice(0,120)||'no se pudo enviar'}`;
+    }
+  }catch(e){
+    status.textContent='No se pudo enviar. Activa CORS en tu panel de SheetDB (Settings → CORS → Allow all origins).';
+  }
+  btn.disabled=false;
+}
+
+async function renderOrgHistory(){
+  const msgs=await fetchMessages();
+  const sorted=[...msgs].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  const div=document.getElementById('org-history-list');
+  if(!sorted.length){div.innerHTML='<p style="font-size:12.5px;color:var(--grey);">Aún no se han enviado mensajes.</p>';return;}
+  div.innerHTML=sorted.map(m=>`
+    <div class="msg-item">
+      <div class="msg-text">${m.text}</div>
+      <div class="msg-meta">${m.timestamp||''}</div>
+    </div>`).join('');
+}
+
+function updateOrgNow(now){
+  const current=getCurrentBlock(now);
+  const next=getNextBlock(now);
+  document.getElementById('org-now-group').textContent=current?`${current.group}${current.subtype?' · '+current.subtype:''}`:now<eventStart?'Evento aún no inicia':'Evento finalizado';
+  document.getElementById('org-now-sub').textContent=current&&current.kind==='performance'?`${fmtTime(current.start)} – ${fmtTime(current.end)}`:'';
+  document.getElementById('org-next-group').textContent=next?`${next.group} a las ${fmtTime(next.start)}`:'— Cierre —';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CLOCK — tick principal
+   ═══════════════════════════════════════════════════════════ */
+let tickCount=0;
+function tick(){
+  const now=new Date();
+  const timeStr=now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const hostClk=document.getElementById('host-clock');
+  if(hostClk)hostClk.textContent=timeStr;
+  const orgClk=document.getElementById('org-clock-pill');
+  if(orgClk)orgClk.textContent='⏱ '+timeStr;
+
+  if(document.getElementById('screen-host').classList.contains('active')){
+    renderHostNow(now);
+    renderTimeline(now);
+    renderOtherZones();
+  }
+  if(document.getElementById('screen-org').classList.contains('active')){
+    updateOrgNow(now);
+  }
+
+  // Poll mensajes cada 5 segundos
+  tickCount++;
+  if(tickCount%5===0)pollMessages();
+}
+
+setInterval(tick,1000);
+tick();
+</script>
+</body>
+</html>
