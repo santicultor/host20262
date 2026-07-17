@@ -95,6 +95,10 @@ html,body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--n
 .badge-alerta{background:var(--alert);color:#4A3800;}
 .script-text{font-size:13.5px;line-height:1.65;color:#222;font-style:italic;border-left:3px solid var(--blue-l);padding-left:12px;margin-top:4px;}
 .script-note{font-size:11.5px;color:var(--grey);margin-top:8px;padding-top:8px;border-top:1px solid var(--line);}
+.script-bullets{list-style:none;padding-left:0;margin-top:4px;}
+.script-bullets li{font-size:14px;line-height:1.5;color:#222;padding:7px 0 7px 26px;position:relative;border-bottom:1px solid var(--line);}
+.script-bullets li:last-child{border-bottom:none;}
+.script-bullets li::before{content:'✓';position:absolute;left:0;top:7px;color:var(--blue);font-weight:700;}
 
 /* Group info card */
 .group-info-card{background:var(--white);border-radius:16px;border:1px solid var(--line);overflow:hidden;margin-bottom:10px;}
@@ -377,98 +381,104 @@ const eventEnd=parseTimeOnDay('3:00');
 /* ── Guiones por grupo ────────────────────────────────────── */
 const SCRIPTS={
   '__apertura__':{
-    pre:{badge:'apertura',label:'Apertura del evento',
-      text:'¡Bienvenidos a La Sabana! Hoy no venimos a explicarles qué es la universidad. Venimos a mostrársela. Estos son los grupos representativos artísticos — quince grupos que ensayan cada semana, suben a escenarios nacionales, y abren las puertas a quien quiera ser parte de algo más grande que una carrera. Todos tienen inscripciones abiertas. El link está en pantalla.',
-      note:'Energía alta, voz proyectada. Recuerda mencionar los talleres en la Pérgola y las activaciones de Teatro por el campus.'}
+    pre:{badge:'apertura',label:'Apertura del evento · puntos clave',
+      bullets:[
+        'Esta es la Feria de Inducciones 2026-2.',
+        'Es el lanzamiento oficial de UniSabana Experience.',
+        'A lo largo de las próximas horas se van a estar presentando nuestros grupos culturales.',
+        'Explicar cómo funcionan las rutas: cada estudiante puede escoger la ruta cultural que más le interese.',
+        'Invitar a todos a pasar a la estación central.'
+      ],
+      note:'Energía alta, voz proyectada. Estos son los puntos que no pueden faltar — dilos con tus propias palabras.'}
   },
   'Repercusión':{
     pre:{badge:'pre',label:'Antes de que inicien',
-      text:'Repercusión está recibiendo a los estudiantes nuevos en la entrada. Su trabajo hoy no es solo musical — es crear la primera impresión del evento.',
-      note:'Grupo de percusión tipo drumline. Dir. Santiago Torrents. Ensayan lunes y miércoles, Sala de ensayo 2.'},
-    logros:['Representan a La Sabana en festivales universitarios de percusión a nivel nacional.','Combinan disciplina musical con coreografía grupal.','Una de las presencias más impactantes del campus.'],
+      text:'Repercusión es el grupo de percusión de La Sabana, tipo drumline: combinan ritmo, coreografía y trabajo en conjunto. Hoy están recibiendo a los estudiantes nuevos en la entrada, marcando el ritmo de la llegada. Dirigidos por Santiago Torrents.',
+      note:'Grupo de percusión tipo drumline. Dir. Santiago Torrents. Ensayan lunes y miércoles, Sala de ensayo 2. No requieren amplificación.'},
+    logros:['Grupo de percusión tipo drumline: ritmo y movimiento en conjunto.','Combinan disciplina musical con coreografía grupal.'],
     post:{badge:'post',label:'Después de su momento en entrada',
-      text:'Repercusión abrió el camino. Y así como ellos marcan el ritmo, hoy la cultura de La Sabana marca el inicio de tu vida universitaria.',
+      text:'Ese fue Repercusión, marcando el ritmo de tu llegada a La Sabana. Si te llama la percusión, ensayan lunes y miércoles en la Sala de ensayo 2.',
       note:'Transición hacia el ingreso al Arena Sabana.'}
   },
   'Entre Mares':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'Abren la Tarima Principal. Entre Mares trae desde el primer momento las raíces musicales de Colombia — gaitas y tambores del Pacífico y el Caribe.',
-      note:'Dir. Jordy Sánchez.'},
-    logros:['Representan a La Sabana en encuentros de músicas tradicionales colombianas.','Mantienen viva una tradición que combina herencia africana, indígena y española.','Llevan las músicas del Pacífico y el Caribe a escenarios universitarios de todo el país.'],
+      text:'Abren la Tarima Principal. Entre Mares es una agrupación de gaitas y tambores que interpreta música del Pacífico y el Caribe colombiano. Desde el primer momento nos conectan con las raíces musicales de nuestro país — con esos ritmos tradicionales que nacen del encuentro de culturas. Dirigidos por Jordy Sánchez.',
+      note:'Dir. Jordy Sánchez. Es el grupo más nuevo de la Universidad.'},
+    logros:['Es el grupo más nuevo de la Universidad.','Busca rescatar las raíces musicales de nuestro país.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Entre Mares acaba de traernos Colombia entera en 10 minutos. Eso es lo que hacen cada semana. Si esto te llamó, sus ensayos son los miércoles y viernes en la Sala de ensayo 2.',
+      text:'Eso fue Entre Mares — el grupo más nuevo de La Sabana, rescatando las raíces de nuestro país. Si esto te llamó, sus ensayos son los miércoles y viernes en la Sala de ensayo 2.',
       note:'Mencionar link de inscripción en pantalla.'}
   },
   'Vallenato / Parranda':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'Ahora, el ritmo que nos une como colombianos. La alegría del vallenato llega a la tarima — acordeón, caja y guacharaca.',
-      note:'Dir. Jordy Sánchez.'},
-    logros:['Vallenato: Patrimonio Inmaterial de la Humanidad (UNESCO).','Participan en festivales universitarios del Caribe colombiano.','Hacen que la parranda sea parte de la identidad cultural de La Sabana.'],
+      text:'Ahora la fiesta llega a la tarima. Vallenato y Parranda es una agrupación de música vallenata y parrandera — acordeón, caja y guacharaca. Es uno de los grupos que más se presenta en el campus: solo el semestre pasado tuvieron una de las agendas más llenas. Y no es casualidad — son de los que ponen a bailar a cualquier persona. Dirigidos por Jordy Sánchez.',
+      note:'Dir. Jordy Sánchez. Uno de los grupos que más se presenta en el campus.'},
+    logros:['Es uno de los grupos que más se presenta en el campus.','Ponen a bailar a cualquier persona.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'El vallenato — Patrimonio de la Humanidad — acaba de sonar en La Sabana. Si quieres aprender o ya sabes tocar, Vallenato y Parranda ensayan miércoles y viernes en la Sala de ensayo 2.',
+      text:'¡Eso es Parranda! Uno de los grupos que más se presenta en La Sabana, y ya vieron por qué. Si quieres unirte, ensayan miércoles y viernes en la Sala de ensayo 2.',
       note:''}
   },
   'Grupo Fusión':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'Ahora el grupo que no se define por un solo sonido. Grupo Fusión tiene 15 minutos para mostrarnos todo lo que la música puede ser — crossover, pop, rock, lo que pidan.',
+      text:'Ahora sube Grupo Fusión, una banda de crossover que combina géneros y sonoridades en un mismo repertorio. No se definen por un solo estilo: mezclan crossover, pop, rock y más. Tienen 15 minutos en tarima — el tiempo más largo de la tarde. Dirigidos por Gustavo Rincón.',
       note:'Dir. Gustavo Rincón. 15 minutos — el tiempo más largo de la tarde.'},
-    logros:['Banda de crossover: fusionan géneros y sonoridades en un mismo repertorio.','Ningún concierto de Fusión suena igual al anterior — esa es su marca.','Representan a La Sabana en la agenda cultural y festivales universitarios.'],
+    logros:['Banda de crossover: fusionan géneros y sonoridades en un mismo repertorio.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Eso es Grupo Fusión — la prueba de que en La Sabana la música no tiene fronteras. Ensayan miércoles y viernes en la Sala de ensayo 1.',
+      text:'Eso fue Grupo Fusión. Si te gusta mezclar géneros y no encasillarte en un solo estilo, este es tu grupo. Ensayan miércoles y viernes en la Sala de ensayo 1.',
       note:''}
   },
   'Punto Rock':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'El volumen sube. Punto Rock trae el rock a la Tarima Principal.',
-      note:'Dir. Julián Crosby.'},
-    logros:['Llevan el rock a los escenarios universitarios con energía que genera comunidad.','Representan a La Sabana en encuentros universitarios de bandas a nivel nacional.','Han formado músicos que hoy se desempeñan profesionalmente en la escena colombiana.'],
+      text:'Sube el volumen: llega Punto Rock, la banda de rock representativa de La Sabana. Recorren distintas vertientes del rock en presentaciones en vivo llenas de energía. Dirigidos por Julián Crosby, el mismo director de Puente Rojo.',
+      note:'Dir. Julián Crosby (también dirige Puente Rojo).'},
+    logros:['Banda de rock representativa de La Sabana.','Recorren distintas vertientes del género en vivo.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Punto Rock — el rock de La Sabana, con todo el género encima. Ensayan martes y jueves en la Sala de ensayo 1.',
+      text:'¡Eso fue Punto Rock! Si el rock es lo tuyo, ensayan martes y jueves en la Sala de ensayo 1.',
       note:''}
   },
   'Puente Rojo':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'De la misma familia musical, otro sonido. Puente Rojo llega con su propuesta de pop-rock.',
-      note:'Dir. Julián Crosby — mismo director que Punto Rock.'},
-    logros:['Construyen una propuesta pop-rock propia, con versiones y temas propios.','Participan en los festivales y conciertos de la agenda cultural de La Sabana.','Un sonido identificable que conecta con la comunidad estudiantil.'],
+      text:'De la misma familia, otro sonido. Puente Rojo es la banda de pop-rock de La Sabana: exploran arreglos propios y versiones con una propuesta cercana al público joven. Participaron en ASCUN regional y son uno de los grupos con más presentaciones en el semestre. También dirigidos por Julián Crosby.',
+      note:'Dir. Julián Crosby — mismo director que Punto Rock. Participación en ASCUN regional.'},
+    logros:['Banda de pop-rock con arreglos propios y versiones.','Participación en ASCUN regional.','De los grupos con más presentaciones en el semestre.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Dos bandas, un mismo director, mundos distintos. Eso es lo que hace única la escena musical de La Sabana. Puente Rojo ensaya martes y jueves en la Sala de ensayo 1.',
+      text:'Dos bandas, un mismo director, dos mundos distintos: Punto Rock y Puente Rojo. Puente Rojo ensaya martes y jueves en la Sala de ensayo 1.',
       note:''}
   },
   'Ancestros':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'Ahora la tarima se transforma. Ancestros nos trae las tradiciones dancísticas de Colombia en 15 minutos de danza folclórica.',
-      note:'Dir. Alexandra Reyes. Hoy también tienen taller abierto — fue en la Pérgola de 12:20 a 1:00 p.m.'},
-    logros:['🏆 Primer lugar en los Juegos Universitarios ASCUN 2026 en Danza Folclórica.','Su montaje "Cintureras de Guaduas" representa la tradición de Cundinamarca.','Con 34 integrantes, es el grupo representativo con más estudiantes activos.'],
+      text:'Ahora la tarima se transforma. Ancestros es el grupo de danza folclórica colombiana de La Sabana: investigan y representan las tradiciones dancísticas de distintas regiones del país. Vienen de ganar el primer lugar en la competencia ASCUN con su montaje "Cintureras de Guaduas". Es, además, el grupo con más estudiantes activos. Dirigidos por Alexandra Reyes.',
+      note:'Dir. Alexandra Reyes. Hoy también tuvieron taller abierto en la Pérgola (12:20 a 1:00 p.m.).'},
+    logros:['🏆 Primer lugar en la competencia ASCUN de Danza Folclórica.','Su montaje "Cintureras de Guaduas" representa la tradición de nuestra región.','Es el grupo representativo con más estudiantes activos.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Cada movimiento de Ancestros es una historia de Colombia. Si la danza folclórica te llamó, ensayan lunes, jueves y viernes en la Pérgola 3.',
+      text:'¡Ese es el nivel de Ancestros, primer lugar en ASCUN! Si la danza folclórica te llamó, ensayan lunes, jueves y viernes en la Pérgola 3.',
       note:''}
   },
   'Tuna Masculina':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'Una de las tradiciones más antiguas de la universidad llega ahora a la tarima. La Tuna Masculina de La Sabana.',
-      note:'Dir. Alejandro Trochez. Las tunas tienen siglos de historia en las universidades hispánicas.'},
-    logros:['Participan en encuentros de tunas universitarias a nivel nacional e internacional.','Guardianes de una tradición musical universitaria de siglos.','Han representado a La Sabana en certámenes internacionales.'],
+      text:'Llega una de las tradiciones universitarias más queridas: la Tuna Masculina de La Sabana. Combinan instrumentos de cuerda, percusión e interpretación vocal en un repertorio festivo y tradicional. Dirigidos por Alejandro Trochez.',
+      note:'Dir. Alejandro Trochez. No requieren amplificación.'},
+    logros:['Agrupación de cuerda, percusión y voz.','Repertorio festivo y tradicional de las tunas universitarias.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Siglos de tradición universitaria, vivos hoy en La Sabana. La Tuna Masculina ensaya martes y viernes en la Sala de ensayo 3.',
+      text:'Esa fue la Tuna Masculina. Si quieres ser parte de esta tradición, ensayan martes y viernes en la Sala de ensayo 3.',
       note:''}
   },
   'Tuna Femenina':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'La tradición continúa, ahora con la voz femenina de La Sabana. La Tuna Femenina.',
-      note:'Dir. Juliana Ñungo.'},
-    logros:['Una de las tunas femeninas universitarias más activas de Colombia.','Participan en festivales y encuentros de tunas a nivel nacional.','Rompen con la tradición masculina para construir una voz propia.'],
+      text:'La tradición continúa con la Tuna Femenina de La Sabana: cuerda, percusión y voz en un repertorio festivo, con su propia identidad. Dirigidas por Juliana Ñungo.',
+      note:'Dir. Juliana Ñungo. No requieren amplificación.'},
+    logros:['Tuna universitaria femenina: cuerda, percusión y voz.','Repertorio festivo con identidad propia.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'Dos tunas, una sola universidad. La Tuna Femenina ensaya martes y viernes en la Sala de ensayo 3.',
+      text:'¡Esa fue la Tuna Femenina! Ensayan martes y viernes en la Sala de ensayo 3.',
       note:''}
   },
   'Orquesta Sinfónica':{
     pre:{badge:'pre',label:'Antes de que suban',
-      text:'Para cerrar la Tarima Principal, el grupo de mayor amplitud sonora de La Sabana. La Orquesta Sinfónica Universitaria — OSUS.',
-      note:'Dir. Alexander Pinilla. Una de las pocas orquestas sinfónicas universitarias activas en Colombia.'},
-    logros:['Una de las pocas orquestas sinfónicas universitarias activas en Colombia.','Han interpretado obras del repertorio clásico y contemporáneo en escenarios de Bogotá y Chía.','Forman músicos con un nivel técnico e interpretativo de alto nivel.'],
+      text:'Para cerrar la Tarima Principal, sube la Orquesta Sinfónica Universitaria — la OSUS. Es la orquesta de La Sabana, conformada por secciones de cuerdas y vientos. Dirigida por Alexander Pinilla.',
+      note:'Dir. Alexander Pinilla. La OSUS está conformada por cuerdas y vientos.'},
+    logros:['Es la orquesta sinfónica de La Sabana (OSUS).','Conformada por secciones de cuerdas y vientos.'],
     post:{badge:'post',label:'Después de la presentación',
-      text:'La OSUS cierra la tarima principal como lo que es: la agrupación que demuestra que en La Sabana la música académica también tiene casa. Ensayan martes y miércoles en la Sala de ensayo 3.',
+      text:'Esa fue la OSUS, la Orquesta Sinfónica de La Sabana. Si tocas un instrumento de cuerda o de viento, este es tu espacio. Ensayan martes y miércoles en la Sala de ensayo 3.',
       note:''}
   },
   '__cierre__':{
@@ -482,14 +492,14 @@ const SCRIPTS={
 const GROUP_DETAIL={
   'Repercusión':{director:'Santiago Torrents',desc:'Drumline con coreografía. Ritmo y movimiento en conjunto.',ensayo:'Lunes y Miércoles · Sala de ensayo 2'},
   'Entre Mares':{director:'Jordy Sánchez',desc:'Gaitas y tambores del Pacífico y el Caribe colombiano.',ensayo:'Miércoles y Viernes · Sala de ensayo 2'},
-  'Vallenato / Parranda':{director:'Jordy Sánchez',desc:'Acordeón, caja y guacharaca. Tradición vallenata.',ensayo:'Miércoles y Viernes · Sala de ensayo 2'},
-  'Grupo Fusión':{director:'Gustavo Rincón',desc:'Crossover: mezcla géneros y rompe fronteras musicales.',ensayo:'Miércoles y Viernes · Sala de ensayo 1'},
-  'Punto Rock':{director:'Julián Crosby',desc:'Rock universitario con amplia energía en vivo.',ensayo:'Martes y Jueves · Sala de ensayo 1'},
-  'Puente Rojo':{director:'Julián Crosby',desc:'Pop-rock con arreglos propios para públicos jóvenes.',ensayo:'Martes y Jueves · Sala de ensayo 1'},
-  'Ancestros':{director:'Alexandra Reyes',desc:'Danza folclórica colombiana: memoria, identidad y celebración.',ensayo:'Lun / Jue / Vie · Pérgola 3'},
-  'Tuna Masculina':{director:'Alejandro Trochez',desc:'Cuerda, percusión y voz. Tradición universitaria de siglos.',ensayo:'Martes y Viernes · Sala de ensayo 3'},
-  'Tuna Femenina':{director:'Juliana Ñungo',desc:'Tuna universitaria femenina. Voz y tradición propias.',ensayo:'Martes y Viernes · Sala de ensayo 3'},
-  'Orquesta Sinfónica':{director:'Alexander Pinilla',desc:'OSUS: cuerdas, vientos y repertorio académico y contemporáneo.',ensayo:'Martes y Miércoles · Sala de ensayo 3'},
+  'Vallenato / Parranda':{director:'Jordy Sánchez',desc:'Vallenato y parranda: acordeón, caja y guacharaca. De los que más se presentan en el campus.',ensayo:'Miércoles y Viernes · Sala de ensayo 2'},
+  'Grupo Fusión':{director:'Gustavo Rincón',desc:'Banda de crossover: mezcla géneros y sonoridades en un mismo repertorio.',ensayo:'Miércoles y Viernes · Sala de ensayo 1'},
+  'Punto Rock':{director:'Julián Crosby',desc:'Banda de rock representativa de La Sabana, en vivo.',ensayo:'Martes y Jueves · Sala de ensayo 1'},
+  'Puente Rojo':{director:'Julián Crosby',desc:'Banda de pop-rock con arreglos propios y versiones.',ensayo:'Martes y Jueves · Sala de ensayo 1'},
+  'Ancestros':{director:'Alexandra Reyes',desc:'Danza folclórica colombiana. Primer lugar ASCUN con "Cintureras de Guaduas".',ensayo:'Lun / Jue / Vie · Pérgola 3'},
+  'Tuna Masculina':{director:'Alejandro Trochez',desc:'Tuna universitaria: cuerda, percusión y voz. Repertorio festivo.',ensayo:'Martes y Viernes · Sala de ensayo 3'},
+  'Tuna Femenina':{director:'Juliana Ñungo',desc:'Tuna universitaria femenina: cuerda, percusión y voz.',ensayo:'Martes y Viernes · Sala de ensayo 3'},
+  'Orquesta Sinfónica':{director:'Alexander Pinilla',desc:'La orquesta sinfónica de La Sabana (OSUS), conformada por secciones de cuerdas y vientos.',ensayo:'Martes y Miércoles · Sala de ensayo 3'},
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -552,6 +562,17 @@ function getScriptContext(now,current){
 /* ═══════════════════════════════════════════════════════════
    RENDER HOST
    ═══════════════════════════════════════════════════════════ */
+// Renderiza el cuerpo de un guion: soporta texto corrido o bullet points.
+function scriptBodyHTML(script){
+  let inner='';
+  if(script.bullets&&script.bullets.length){
+    inner=`<ul class="script-bullets">${script.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+  } else if(script.text){
+    inner=`<div class="script-text">${script.text}</div>`;
+  }
+  return inner+(script.note?`<div class="script-note">📎 ${script.note}</div>`:'');
+}
+
 function renderHostNow(now){
   const current=getCurrentBlock(now);
   const next=getNextBlock(now);
@@ -618,8 +639,7 @@ function renderHostNow(now){
         scriptDiv.innerHTML=`
           <div class="script-card">
             <span class="script-badge badge-${script.badge}">${script.label}</span>
-            <div class="script-text">${script.text}</div>
-            ${script.note?`<div class="script-note">📎 ${script.note}</div>`:''}
+            ${scriptBodyHTML(script)}
           </div>`;
       }
     }
@@ -731,8 +751,7 @@ function openScriptModal(groupName){
   if(s){
     if(s.pre){
       html+=`<div class="sec-head" style="margin-top:16px;">💬 Antes de que suban</div>
-        <div class="script-card"><div class="script-text">${s.pre.text}</div>
-        ${s.pre.note?`<div class="script-note">📎 ${s.pre.note}</div>`:''}</div>`;
+        <div class="script-card">${scriptBodyHTML(s.pre)}</div>`;
     }
     if(s.logros){
       html+=`<div class="sec-head" style="margin-top:14px;">🏆 Logros que puedes mencionar</div>
@@ -741,8 +760,7 @@ function openScriptModal(groupName){
     }
     if(s.post){
       html+=`<div class="sec-head" style="margin-top:14px;">✅ Después de la presentación</div>
-        <div class="script-card"><div class="script-text">${s.post.text}</div>
-        ${s.post.note?`<div class="script-note">📎 ${s.post.note}</div>`:''}</div>`;
+        <div class="script-card">${scriptBodyHTML(s.post)}</div>`;
     }
   }
   if(detail){
