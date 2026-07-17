@@ -778,8 +778,9 @@ async function fetchMessages(){
 async function pollMessages(){
   const msgs=await fetchMessages();
   if(!msgs.length)return;
-  // Ordenar por timestamp descendente
-  const sorted=[...msgs].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  // Ordenar por id (Date.now, siempre creciente) descendente
+  const sorted=[...msgs].filter(m=>m.text).sort((a,b)=>Number(b.id||0)-Number(a.id||0));
+  if(!sorted.length)return;
   const latest=sorted[0];
   const latestId=latest.id||latest.timestamp;
   // Mostrar alerta si es un mensaje nuevo no visto
@@ -826,15 +827,10 @@ async function sendMessage(){
   const id=Date.now().toString();
   try{
     const url=SHEET_NAME?`${SHEETDB_URL}?sheet=${encodeURIComponent(SHEET_NAME)}`:SHEETDB_URL;
-    // form-urlencoded = petición "simple", no dispara preflight CORS.
-    const params=new URLSearchParams();
-    params.append('data[0][id]',id);
-    params.append('data[0][text]',text);
-    params.append('data[0][timestamp]',ts);
     const r=await fetch(url,{
       method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
-      body:params.toString()
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({data:[{id:id,text:text,timestamp:ts}]})
     });
     if(r.ok){
       status.textContent='✓ Mensaje enviado al host.';
@@ -853,7 +849,7 @@ async function sendMessage(){
 
 async function renderOrgHistory(){
   const msgs=await fetchMessages();
-  const sorted=[...msgs].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+  const sorted=[...msgs].filter(m=>m.text).sort((a,b)=>Number(b.id||0)-Number(a.id||0));
   const div=document.getElementById('org-history-list');
   if(!sorted.length){div.innerHTML='<p style="font-size:12.5px;color:var(--grey);">Aún no se han enviado mensajes.</p>';return;}
   div.innerHTML=sorted.map(m=>`
